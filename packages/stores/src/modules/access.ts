@@ -35,6 +35,13 @@ interface AccessState {
    * 登录 accessToken
    */
   refreshToken: AccessToken;
+  /**
+   * token 过期时间
+   */
+  tokenExpires: null | {
+    accessToken: string;
+    refreshToken: string;
+  };
 }
 
 /**
@@ -82,10 +89,13 @@ export const useAccessStore = defineStore('core-access', {
     setRefreshToken(token: AccessToken) {
       this.refreshToken = token;
     },
+    setTokenExpires(expires: AccessState['tokenExpires']) {
+      this.tokenExpires = expires;
+    },
   },
   persist: {
     // 持久化
-    pick: ['accessToken', 'refreshToken', 'accessCodes'],
+    pick: ['accessToken', 'refreshToken', 'accessCodes', 'tokenExpires'],
   },
   state: (): AccessState => ({
     accessCodes: [],
@@ -95,6 +105,7 @@ export const useAccessStore = defineStore('core-access', {
     isAccessChecked: false,
     loginExpired: false,
     refreshToken: null,
+    tokenExpires: null,
   }),
 });
 

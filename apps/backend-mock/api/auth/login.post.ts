@@ -29,8 +29,20 @@ export default defineEventHandler(async (event) => {
 
   setRefreshTokenCookie(event, refreshToken);
 
+  // 计算过期时间
+  const now = new Date();
+  const accessTokenExpiresIn = 7 * 24 * 60 * 60 * 1000; // 7天
+  const refreshTokenExpiresIn = 30 * 24 * 60 * 60 * 1000; // 30天
+
+  const accessTokenExpiresAt = new Date(now.getTime() + accessTokenExpiresIn);
+  const refreshTokenExpiresAt = new Date(now.getTime() + refreshTokenExpiresIn);
+
   return useResponseSuccess({
     ...findUser,
     accessToken,
+    expires: {
+      accessToken: accessTokenExpiresAt.toISOString(),
+      refreshToken: refreshTokenExpiresAt.toISOString(),
+    },
   });
 });
